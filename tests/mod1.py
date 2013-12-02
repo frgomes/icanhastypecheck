@@ -1,5 +1,5 @@
 #
-# exmaple Module for TypeCheck Test
+# example Module for testing @typesafe
 # 
 
 class Point(object):
