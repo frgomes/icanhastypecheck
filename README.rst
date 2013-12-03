@@ -9,26 +9,31 @@
 
 
 
-``sphinx_typesafe`` is a small and easy to use decorator to enable dynamic type checking for python 
-method and function calls. Working and tested for Python2.7 but should run in other Python2 as well.
-Create an issue_ on github if you encounter any problems using it.
+``sphinx_typesafe`` is a decorator which enables dynamic type checking on Python 
+method and function calls. It works in conjunction with `Sphinx-style docstrings`_,
+which makes it particularly convenient for keeping the code documentation up-to-date
+with the code actually being executed.
 
+.. _`Sphinx-slyle docstrings`: http://sphinx-doc.org/markup/desc.html#info-field-lists
 .. _issue : https://github.com/frgomes/sphinx_typesafe/issues
 
 
-* Function type specification is based on a naming/docstring convention for Python3.
+Features is a Nutshell
+======================
 
-* Typechecking is implemented as a decorator that can be attached to any function or method and will perform the according (dynamic) typechecking. It will raise a TypeError if the arguments don't match the function specification.
+* The decorator can be attached to any function or method.
 
-* A tentative implementation for Python3 is included, but not tested.
+* Raises ``TypeError`` if arguments don't match the specification.
+
+* Raises ``TypeError`` if return value type don't match the specification.
+
+* Performs dynamic type checking
 
 
 Python2
 =======
 
-Since function annotations are not available in Python2 the way I chose to implement typechecking for Python2 is a documentation convention for parameters based on `the info field lists of sphinx`_. So even when you don't use typechecking you can use it to auto-generate a function documentation.
-
-There is an alternative approach for those of you who don't like docstings in sphinx format which úses a naming convention. (See Alternatives below)
+Since function annotations are not available in Python2 the way type checking for Python2 is a documentation convention for parameters based on `the info field lists of sphinx`_. So even when you don't use type checking you can use it to generate documentation.
 
 .. _`the info field lists of sphinx`: http://sphinx-doc.org/markup/desc.html#info-field-lists
 
@@ -60,7 +65,7 @@ This is the preferred way since you will be also documenting your code.
 Syntax for Python2 using decorator arguments
 --------------------------------------------
 
-This is discouraged, despite eventually useful in certain circumstances.
+This is an alternative approach, useful in circunstances where Sphinx-style documentation is not allowed or desired, for whatever reason.
 
 ::
 
