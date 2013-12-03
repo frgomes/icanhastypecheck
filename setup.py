@@ -1,5 +1,3 @@
-from __future__ import print_function
-
 import os, re
 from setuptools import setup, find_packages
 
@@ -14,7 +12,7 @@ README  = open(os.path.join(here, 'README.rst')).read()
 AUTHORS = open(os.path.join(here, 'AUTHORS.rst')).read()
 CHANGES = open(os.path.join(here, 'CHANGES.rst')).read()
 
-short_description = '@typesafe employs docstrings for type checking'
+short_description = 'Type checking @typesafe employing Sphinx docstrings'
 long_description = (
     README
     + '\n' +

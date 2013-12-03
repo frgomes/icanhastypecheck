@@ -1,12 +1,13 @@
-sphinx-typesafe
+sphinx_typesafe
 ===============
 
 *previously named IcanHasTypeCheck (ICHTC)*
 
-
 is a small and easy to use decorator to enable dynamic type checking for python 
 method and function calls. Working and tested for Python2.7 but should run in other Python2 as well.
-Create an [issue](https://github.com/pythononwheels/icanhastypecheck/issues) on github if you encounter any problems using it.
+Create an issue_ on github if you encounter any problems using it.
+
+.. _issue : https://github.com/frgomes/sphinx_typesafe/issues
 
 
 * Function type specification is based on a naming/docstring convention for Python3.
@@ -19,9 +20,11 @@ Create an [issue](https://github.com/pythononwheels/icanhastypecheck/issues) on 
 Python2
 -------
 
-Since function annotations are not available in Python2 the way I chose to implement typechecking for Python2 is a documentation convention for parameters based on [the info field lists of sphinx](http://sphinx-doc.org/markup/desc.html#info-field-lists). So even when you don't use typechecking you can use it to auto-generate a function documentation.
+Since function annotations are not available in Python2 the way I chose to implement typechecking for Python2 is a documentation convention for parameters based on `the info field lists of sphinx`_. So even when you don't use typechecking you can use it to auto-generate a function documentation.
 
 There is an alternative approach for those of you who don't like docstings in sphinx format which úses a naming convention. (See Alternatives below)
+
+.. `the info field lists of sphinx`: http://sphinx-doc.org/markup/desc.html#info-field-lists
 
 
 Syntax for Python2 using decorator arguments
@@ -41,12 +44,12 @@ Syntax for Python2 using decorator arguments
 
 .. note::
 
-   Observe the use of ``return`` to specify the type returned by the function.
+   Observe the usage of ``return`` to specify the type returned by the function.
 
 
 
-Syntax for Python2using (sphinx style) docstrings
-'''''''''''''''''''''''''''''''''''''''''''''''''
+Syntax for Python2 using (sphinx style) docstrings
+''''''''''''''''''''''''''''''''''''''''''''''''''
 
 ::
 
@@ -63,7 +66,7 @@ Syntax for Python2using (sphinx style) docstrings
 
 .. note::
 
-    Observe the use of ``rtype`` to specify the type returned by the function.
+    Observe the usage of ``rtype`` to specify the type returned by the function.
 
 
 
@@ -108,9 +111,12 @@ Python3
     This is a tentative implementation which is not tested yet!!
 
 
-The base technique is the Function Annotations proposed in [PEP 3107](http://www.python.org/dev/peps/pep-3107/) which is 
-implemented in [Python3](http://docs.python.org/3.0/whatsnew/3.0.html) (see section New Syntax).
+The base technique is the Function Annotations proposed in `PEP-3107`_ which is 
+documented in `Python3 What's New`_ (see section New Syntax).
 
+
+.. _`PEP-3107`: http://www.python.org/dev/peps/pep-3107
+.. _`Python3 What's New`: http://docs.python.org/3.0/whatsnew/3.0.html
 
 
 Syntax for Python3
@@ -128,7 +134,10 @@ Syntax for Python3
 
 * As a quoting remark from the PEP 3107: "All annotated parameter types can be any python expression.", but for typechecking only types make sense, though.
 
-The idea and parts of the implementation were inspired by the book: [Pro Python (Expert's Voice in Open Source)](http://www.amazon.de/Python-Experts-Voice-Open-Source/dp/1430227575)
+The idea and parts of the implementation were inspired by the book: `Pro Python (Expert's Voice in Open Source)`_
+
+.. _`Pro Python (Expert's Voice in Open Source)`: http://www.amazon.com/Python-Experts-Voice-Open-Source/dp/1430227575
+
 
 
 FAQ
@@ -137,10 +146,12 @@ FAQ
 Why it was called IcanHasTypeCheck ?
 ''''''''''''''''''''''''''''''''''''
 
-BTW: The project name "IcanHasTypeCheck" refers to the [famous lolcats](http://en.wikipedia.org/wiki/I_Can_Has_Cheezburger%3F)
+BTW: The project name "IcanHasTypeCheck" refers to the `famous lolcats`_.
+
+.. _`famous lolcats`: http://en.wikipedia.org/wiki/I_Can_Has_Cheezburger%3F
 
 
-Why is now called sphinx-typesafe ?
+Why is now called sphinx_typesafe ?
 '''''''''''''''''''''''''''''''''''
 
 Because *typesafe* tells immediatelly what it is about. Unfortunately, *typesafe* was already taken on PyPI, so *sphinx_typesafe* seemed to be a good altenative name which also relates to the documentation standard adopted.
