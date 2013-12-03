@@ -14,8 +14,7 @@ method and function calls. It works in conjunction with `Sphinx-style docstrings
 which makes it particularly convenient for keeping the code documentation up-to-date
 with the code actually being executed.
 
-.. _`Sphinx-slyle docstrings`: http://sphinx-doc.org/markup/desc.html#info-field-lists
-.. _issue : https://github.com/frgomes/sphinx_typesafe/issues
+.. _`Sphinx-style docstrings`: http://sphinx-doc.org/markup/desc.html#info-field-lists
 
 
 Features is a Nutshell
@@ -23,11 +22,11 @@ Features is a Nutshell
 
 * The decorator can be attached to any function or method.
 
-* Raises ``TypeError`` if arguments don't match the specification.
+* Raises ``TypeError`` if types of arguments do not match the specification.
 
-* Raises ``TypeError`` if return value type don't match the specification.
+* Raises ``TypeError`` if type of return value does not match the specification.
 
-* Performs dynamic type checking
+* Performs dynamic type checking.
 
 
 Python2
@@ -88,24 +87,25 @@ This is an alternative approach, useful in circunstances where Sphinx-style docu
 You can use any Python type
 ---------------------------
 
-So if you have defined a Point() class in mod1 then  you could specify is like:
+So if you have defined a ``Point`` class in module ``mod1`` like below:
 
 ::
 
+    # File: mod1.py
+
     class Point(object):
-        # File: mod1.py
 	def __init__(self, x = None, y = None):
             """ Initialize the Point. Can be used to give x,y directly."""
 	    self.x = x
 	    self.y = y
 
-and utilize what you've defined like this:
+then you can employ this type in your code like this:
 
 ::
 
-   # another module.py
    from mod1 import Point
 
+   @typesafe
    def foo(afunc):
        """ 
        :type afunc: 	mod1.Point
@@ -114,16 +114,12 @@ and utilize what you've defined like this:
        return True
 
 
-The decorator typesafe will first check if it is running in a Python3 or Pyton2 environment and 
-react accordingly.
-
-
 Python3
 =======
 
 .. warning::
 
-    This is a tentative implementation which is not tested yet!!
+    This is a tentative implementation which is not finished at the moment!!
 
 
 The base technique is the Function Annotations proposed in `PEP-3107`_ which is 
