@@ -30,7 +30,7 @@ class typesafe(object):
     __types_re = re.compile(r":type[\s]+(\w+):[\s]+([\w\.]+)", re.IGNORECASE)
     __rtype_re = re.compile(r":rtype:[\s]+([\w\.]+)", re.IGNORECASE)
 
-    __error = "Wrong type for '{}': expected: '{}', actual: '{}'."
+    __error = "Wrong type for '{}': expected: {}, actual: {}."
 
     def __init__(self, *args, **kwargs):
         self.noparams = len(args) == 1 and not kwargs and callable(args[0])
@@ -134,18 +134,18 @@ class typesafe(object):
         spec = inspect.getargspec(func)
         for name, arg in chain(zip(spec.args, args), kwargs.items()):
             if name in self.types and not isinstance(arg, self.types[name]):
-                raise TypeError(self.__error.format(name, self.types[name], type(arg).__name__))
+                raise TypeError(self.__error.format(name, self.types[name], arg))
 
     def validate_result(self, result):
         """Validate returned value of a decorated function."""
         if 'return' in self.types:
             print('check returned type ', type(result), 'against', self.types['return'])
             if not isinstance(result, self.types['return']):
-                raise TypeError(self.__error.format('return', self.types['return'], type(result).__name__ ))
+                raise TypeError(self.__error.format('return', self.types['return'], type(result)))
         else:
             print('check returned type ', type(result), 'against <NoneType>')
             if result is not None:
-                raise TypeError(self.__error.format('return', 'None', type(result).__name__ ))
+                raise TypeError(self.__error.format('return', 'None', type(result)))
 
 
 if __name__ == "__main__":
