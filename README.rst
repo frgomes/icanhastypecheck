@@ -1,9 +1,15 @@
-sphinx_typesafe
-===============
+| Code_ | Bugs_ | Forum_ | Docs_ | License_ | Contact_
 
-*previously named IcanHasTypeCheck (ICHTC)*
+.. _Code : http://github.com/frgomes/sphinx_typesafe
+.. _Bugs : http://github.com/frgomes/sphinx_typesafe/issues
+.. _Forum : http://github.com/frgomes/sphinx_typesafe/wiki
+.. _Docs : http://sphinx_typesafe.readthedocs.org
+.. _License : http://opensource.org/licenses/Apache-2.0
+.. _Contact : http://github.com/~frgomes
 
-is a small and easy to use decorator to enable dynamic type checking for python 
+
+
+``sphinx_typesafe`` is a small and easy to use decorator to enable dynamic type checking for python 
 method and function calls. Working and tested for Python2.7 but should run in other Python2 as well.
 Create an issue_ on github if you encounter any problems using it.
 
@@ -18,38 +24,19 @@ Create an issue_ on github if you encounter any problems using it.
 
 
 Python2
--------
+=======
 
 Since function annotations are not available in Python2 the way I chose to implement typechecking for Python2 is a documentation convention for parameters based on `the info field lists of sphinx`_. So even when you don't use typechecking you can use it to auto-generate a function documentation.
 
 There is an alternative approach for those of you who don't like docstings in sphinx format which úses a naming convention. (See Alternatives below)
 
-.. `the info field lists of sphinx`: http://sphinx-doc.org/markup/desc.html#info-field-lists
+.. _`the info field lists of sphinx`: http://sphinx-doc.org/markup/desc.html#info-field-lists
 
 
-Syntax for Python2 using decorator arguments
-''''''''''''''''''''''''''''''''''''''''''''
+Syntax for Python2 using sphinx style docstrings
+------------------------------------------------
 
-::
-
-	@typesafe( { "param_a" : str, 
-		     "param_b" : types.IntType, 
-		     "param_c" : own_module.OwnType
-		     "return"  : bool }
-		     )
-	def foo(param_a, param_b, param_c):
-		""" Some Docstring Info		 """
-		# Do Something 
-		return True
-
-.. note::
-
-   Observe the usage of ``return`` to specify the type returned by the function.
-
-
-
-Syntax for Python2 using (sphinx style) docstrings
-''''''''''''''''''''''''''''''''''''''''''''''''''
+This is the preferred way since you will be also documenting your code.
 
 ::
 
@@ -70,8 +57,31 @@ Syntax for Python2 using (sphinx style) docstrings
 
 
 
+Syntax for Python2 using decorator arguments
+--------------------------------------------
+
+This is discouraged, despite eventually useful in certain circumstances.
+
+::
+
+	@typesafe( { "param_a" : str, 
+		     "param_b" : types.IntType, 
+		     "param_c" : own_module.OwnType
+		     "return"  : bool }
+		     )
+	def foo(param_a, param_b, param_c):
+		""" Some Docstring Info		 """
+		# Do Something 
+		return True
+
+.. note::
+
+   Observe the usage of ``return`` to specify the type returned by the function.
+
+
+
 You can use any Python type
-'''''''''''''''''''''''''''
+---------------------------
 
 So if you have defined a Point() class in mod1 then  you could specify is like:
 
@@ -104,7 +114,7 @@ react accordingly.
 
 
 Python3
--------
+=======
 
 .. warning::
 
@@ -120,7 +130,7 @@ documented in `Python3 What's New`_ (see section New Syntax).
 
 
 Syntax for Python3
-''''''''''''''''''
+------------------
 
 ::
 
@@ -141,17 +151,23 @@ The idea and parts of the implementation were inspired by the book: `Pro Python 
 
 
 FAQ
----
+===
 
 Why it was called IcanHasTypeCheck ?
-''''''''''''''''''''''''''''''''''''
+------------------------------------
 
-BTW: The project name "IcanHasTypeCheck" refers to the `famous lolcats`_.
+BTW: The project name was *IcanHasTypeCheck (ICHTC)*, which refers to the `famous lolcats`_.
 
 .. _`famous lolcats`: http://en.wikipedia.org/wiki/I_Can_Has_Cheezburger%3F
 
 
 Why is now called sphinx_typesafe ?
-'''''''''''''''''''''''''''''''''''
+-----------------------------------
 
-Because *typesafe* tells immediatelly what it is about. Unfortunately, *typesafe* was already taken on PyPI, so *sphinx_typesafe* seemed to be a good altenative name which also relates to the documentation standard adopted.
+Because *typesafe* tells immediatelly what it is about. Unfortunately, *typesafe* was already taken on PyPI, so *sphinx_typesafe* seemed to be a good alternative name which also relates to the documentation standard adopted.
+
+
+Support
+=======
+
+Please find links on the top of this page.
