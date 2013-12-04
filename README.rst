@@ -157,7 +157,7 @@ FAQ
 Why it was called IcanHasTypeCheck ?
 ------------------------------------
 
-BTW: The project name was *IcanHasTypeCheck (ICHTC)*, which refers to the `famous lolcats`_.
+*IcanHasTypeCheck (ICHTC)*, refers to the `famous lolcats`_.
 
 .. _`famous lolcats`: http://en.wikipedia.org/wiki/I_Can_Has_Cheezburger%3F
 

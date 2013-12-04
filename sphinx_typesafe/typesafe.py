@@ -11,12 +11,8 @@
 # Hosted on Github:  https://github.com/frgomes/sphinx_typesafe
 ###################################################################################
 
-from __future__ import print_function
 from __future__ import unicode_literals
-
-import sys, re
-import inspect
-from itertools import chain
+from __future__ import print_function
 
 
 class typesafe(object):
@@ -27,10 +23,12 @@ class typesafe(object):
     See: http://www.amazon.com/Python-Experts-Voice-Open-Source/dp/1430227575
     """
 
+    import re
     __types_re = re.compile(r":type[\s]+(\w+):[\s]+([\w\.]+)", re.IGNORECASE)
     __rtype_re = re.compile(r":rtype:[\s]+([\w\.]+)", re.IGNORECASE)
 
     __error = "Wrong type for '{}': expected: {}, actual: {}."
+
 
     def __init__(self, *args, **kwargs):
         self.noparams = len(args) == 1 and not kwargs and callable(args[0])
@@ -41,6 +39,7 @@ class typesafe(object):
         else:
             # decorator called with parameters
             self.func = None
+            import sys
             if sys.version_info[0] == 2:
                 self.types = self.parse_params2(*args, **kwargs)
             else:
@@ -70,26 +69,28 @@ class typesafe(object):
         get and return the type of a class 
         :type kls: types.StringType
         """
+        import types
         #print("get_class_type for %s" % (kls), type(kls))
         if type(kls) == str:
-            if kls.count(".") > 0:
-                #kls_instance = reduce(getattr, str.split("."), sys.modules[__name__])
-                #print("partitioned: ", kls.rpartition("."))
-                module = kls.rpartition(".")[0]
-                mod = __import__(module, globals(), locals(), [], -1)
-                klass = kls.rpartition(".")[2]
-                #print(module, mod, klass)
-                kls_instance = getattr(mod, klass)
+            if kls.count('.') > 0:
+                parts = kls.rpartition('.')
+                import importlib
+                m = importlib.import_module(parts[0])
+                t = getattr(m, parts[2])
             else:
-                #print(dir(sys.modules[__name__]))
-                #print(sys.modules[__name__])
-                kls_instance = getattr(sys.modules[__name__], kls)
-                #print(kls_instance)
-                #print(type(kls_instance))
+                import importlib
+                m = importlib.import_module('__builtin__')
+                t = getattr(m, kls)
+            if t is type:
+                return t
+            elif isinstance(t, ( types.TypeType, 
+                                 types.ClassType, 
+                                 types.FunctionType )):
+                return t
+            else:
+                return type(t)
         else:
-            print("type was not str")
-            kls_instance = kls
-        return kls_instance
+            raise NameError("type name must be a string literal")
 
     def convert_entries_to_types(self, types):
         #-- print('types: ', types)
@@ -123,6 +124,7 @@ class typesafe(object):
 
     def inspect_function(self, func):
         """Obtain argument types of a decorated function by instrospecting its Sphinx docstring.""" 
+        import inspect
         # the parameter spec is defined as docstring.
         doc = inspect.getdoc(func)
         entries = self.__types_re.findall(doc)
@@ -131,19 +133,22 @@ class typesafe(object):
 
     def validate_function(self, func, *args, **kwargs):
         """Validate formal parameters before calling a decorated function."""
+        import inspect
+        from itertools import chain
         spec = inspect.getargspec(func)
         for name, arg in chain(zip(spec.args, args), kwargs.items()):
+            # print('Check argument type ', type(arg), 'against', self.types[name])
             if name in self.types and not isinstance(arg, self.types[name]):
-                raise TypeError(self.__error.format(name, self.types[name], arg))
+                raise TypeError(self.__error.format(name, self.types[name], type(arg)))
 
     def validate_result(self, result):
         """Validate returned value of a decorated function."""
         if 'return' in self.types:
-            print('check returned type ', type(result), 'against', self.types['return'])
+            # print('Check returned type ', type(result), 'against', self.types['return'])
             if not isinstance(result, self.types['return']):
                 raise TypeError(self.__error.format('return', self.types['return'], type(result)))
         else:
-            print('check returned type ', type(result), 'against <NoneType>')
+            # print('Check returned type ', type(result), 'against <NoneType>')
             if result is not None:
                 raise TypeError(self.__error.format('return', 'None', type(result)))
 

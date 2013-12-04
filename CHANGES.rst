@@ -12,7 +12,15 @@ CHANGES
 
     * Preparing code for porting to Python3
 
+* New features
+
     * Added verification of return type of decorated functions
+
+* Bugfixes
+
+    * Type resolver now finds types involving multiple nested modules
+
+    * Type resolver assumes module '__builtin__' for simple names, such as 'bool'
 
 * Renamed to *sphinx_typesafe*
 
