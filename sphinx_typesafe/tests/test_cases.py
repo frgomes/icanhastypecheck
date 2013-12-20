@@ -11,7 +11,7 @@ from sphinx_typesafe.typesafe import typesafe
 
 
 @typesafe
-def f_5(a, b, c):
+def f_1(a, b, c):
     """
     :type a: types.StringType
     :type b: types.StringType
@@ -21,6 +21,15 @@ def f_5(a, b, c):
     return '{}+{}+{}'.format(a, b, c) 
 
 
+@typesafe({ 'a': 'types.StringType',
+            'b': 'types.StringType',
+            'c': 'types.StringType',
+            'return': 'types.StringType', })
+def f_2(a, b, c):
+    return '{}+{}+{}'.format(a, b, c) 
+
+
+
 
 class ClassA(object):
 
@@ -28,7 +37,7 @@ class ClassA(object):
         self.x = 'ClassA:'
 
     @typesafe
-    def method_5(self, a, b, c):
+    def method_1(self, a, b, c):
         """
         :type a: types.StringType
         :type b: types.StringType
@@ -37,37 +46,21 @@ class ClassA(object):
         """
         return '{} {}+{}+{}'.format(self.x, a, b, c) 
 
+    @typesafe({ 'a': 'types.StringType',
+                'b': 'types.StringType',
+                'c': 'types.StringType',
+                'return': 'types.StringType', })
+    def method_2(self, a, b, c):
+        return '{} {}+{}+{}'.format(self.x, a, b, c) 
 
-class ClassB(object):
-
-    @typesafe
-    def __init__(self, a, b):
-        """
-        :type a: types.StringType
-        :type b: types.StringType
-        """
-        self.x = 'ClassB:'
-        self.a = a
-        self.b = b
-    
-    @typesafe
-    def method_5(self, c):
-        """
-        :type c: types.StringType
-        :rtype:  types.StringType
-        """
-        return '{} {}+{}+{}'.format(self.x, self.a, self.b, c) 
 
 
 def test_function():
-    assert(f_5('a', 'b', 'c') == 'a+b+c')
+    assert(f_1('a', 'b', 'c') == 'a+b+c')
+    assert(f_2('a', 'b', 'c') == 'a+b+c')
 
 
 def test_classA():
     c = ClassA()
-    assert(c.method_5('a', 'b', 'c') == 'ClassA: a+b+c')
-
-
-def test_classB():
-    c = ClassB('a', 'b')
-    assert(c.method_5('c') == 'ClassB: a+b+c')
+    assert(c.method_1('a', 'b', 'c') == 'ClassA: a+b+c')
+    assert(c.method_2('a', 'b', 'c') == 'ClassA: a+b+c')

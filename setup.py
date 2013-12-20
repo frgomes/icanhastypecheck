@@ -52,5 +52,5 @@ setup(name=name,
       include_package_data=True,
       zip_safe=False,
       setup_requires=setup_requires,
-      test_suite="tests",
+      test_suite=name+'/tests',
       )
