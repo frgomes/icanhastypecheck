@@ -24,99 +24,177 @@ def test_function_fail_01():
     import pytest
     with pytest.raises(AttributeError):
         @typesafe( 'rubbish' )
-        def function_fail():
+        def function_pass():
             pass
-        function_fail()
+        function_pass()
 
 def test_function_fail_02():
     import pytest
     with pytest.raises(AttributeError):
         @typesafe( {}, 'rubbish' )
-        def function_fail():
+        def function_pass():
             pass
-        function_fail()
+        function_pass()
 
 
-def test_function_fail_03():
+def test_function_fail_03a():
     import pytest
     with pytest.raises(NameError):
         @typesafe( { 'a' : None } )
-        def function_fail(x):
-            print(x)
-        function_fail(42)
+        def function_identity(x):
+            return x
+        function_identity(42)
 
-def test_function_fail_04():
+def test_function_fail_03b():
     import pytest
     with pytest.raises(AttributeError):
         @typesafe( { 'a' : '' } )
-        def function_fail(x):
-            print(x)
-        function_fail(42)
+        def function_identity(x):
+            return x
+        function_identity(42)
 
-def test_function_fail_05a():
+def test_function_fail_03c():
     import pytest
     with pytest.raises(NameError):
         @typesafe( { 'a' : 5 } )
-        def function_fail(x):
-            print(x)
-        function_fail(42)
+        def function_identity(x):
+            return x
+        function_identity(42)
 
-def test_function_fail_05b():
+def test_function_fail_03d():
     import pytest
     with pytest.raises(NameError):
         @typesafe( { 'a' : int } )
-        def function_fail(x):
-            print(x)
-        function_fail(42)
+        def function_identity(x):
+            return x
+        function_identity(42)
 
-def test_function_fail_05c():
+def test_function_fail_03e():
     import pytest
     with pytest.raises(NameError):
         @typesafe( { str : int } )
-        def function_fail(x):
-            print(x)
-        function_fail(42)
+        def function_identity(x):
+            return x
+        function_identity(42)
 
-def test_function_fail_a5d():
+def test_function_fail_a3f():
     import pytest
-    from sphinx_typesafe.tests.mod1 import Point
+    from sphinx_typesafe.tests.geometry import Point
     p = Point(3.0, 4.0)
     with pytest.raises(NameError):
         @typesafe( { p : int } )
-        def function_fail(x):
-            print(x)
-        function_fail(42)
+        def function_identity(x):
+            return x
+        function_identity(42)
 
-def test_function_fail_06a():
+def test_function_success_04a():
+    @typesafe
+    def function_identity(x):
+        '''
+        :type x:int
+        :rtype:int
+        '''
+        return x
+    function_identity(42)
+
+def test_function_success_04b():
+    @typesafe
+    def function_identity(x):
+        '''
+        :type    x   :    int     
+        :rtype       :    int     
+        '''
+        return x
+    function_identity(42)
+
+def test_function_success_04c():
+    @typesafe( { 'x'      : 'int',
+                 'return' : 'int' } )
+    def function_identity(x):
+        return x
+    function_identity(42)
+
+def test_function_success_04d():
+    @typesafe( { '  x  '      : '   int   ',
+                 '  return  ' : '   int   ' } )
+    def function_identity(x):
+        return x
+    function_identity(42)
+
+def test_function_fail_05a():
+    import pytest
+    with pytest.raises(AttributeError):
+        @typesafe
+        def function_identity(x):
+            return x
+        function_identity(42)
+
+def test_function_fail_05b():
     import pytest
     with pytest.raises(TypeError):
-        assert(function_f1a('rubbish') == '42')
+        @typesafe
+        def function_identity(x):
+            '''
+            :type x : int
+            '''
+            return x
+        function_identity(42)
 
-def test_function_fail_06b():
+def test_function_fail_05c():
     import pytest
-    with pytest.raises(TypeError):
-        assert(function_f1b('rubbish') == '42')
+    with pytest.raises(AttributeError):
+        @typesafe
+        def function_identity(x):
+            '''
+            :type x : int
+            :type y : int
+            '''
+            return x
+        function_identity(42)
+
+def test_function_fail_05d():
+    import pytest
+    with pytest.raises(AttributeError):
+        @typesafe
+        def function_identity(x):
+            '''
+            :type x: int
+            :type y: int
+            :rtype : int
+            '''
+            return x
+        function_identity(42)
 
 def test_function_fail_07a():
     import pytest
     with pytest.raises(TypeError):
-        from sphinx_typesafe.tests.mod1 import Point
-        assert(function_f1a(Point(3.0, 4.0)) == '42')
+        assert(function_f1a('rubbish') == '42')
 
 def test_function_fail_07b():
     import pytest
     with pytest.raises(TypeError):
-        from sphinx_typesafe.tests.mod1 import Point
-        assert(function_f1b(Point(3.0, 4.0)) == '42')
+        assert(function_f1b('rubbish') == '42')
 
 def test_function_fail_08a():
     import pytest
     with pytest.raises(TypeError):
-        from sphinx_typesafe.tests.mod1 import Point
-        assert(function_f1a(type(Point(3.0, 4.0))) == '42')
+        from sphinx_typesafe.tests.geometry import Point
+        assert(function_f1a(Point(3.0, 4.0)) == '42')
 
 def test_function_fail_08b():
     import pytest
     with pytest.raises(TypeError):
-        from sphinx_typesafe.tests.mod1 import Point
+        from sphinx_typesafe.tests.geometry import Point
+        assert(function_f1b(Point(3.0, 4.0)) == '42')
+
+def test_function_fail_09a():
+    import pytest
+    with pytest.raises(TypeError):
+        from sphinx_typesafe.tests.geometry import Point
+        assert(function_f1a(type(Point(3.0, 4.0))) == '42')
+
+def test_function_fail_09b():
+    import pytest
+    with pytest.raises(TypeError):
+        from sphinx_typesafe.tests.geometry import Point
         assert(function_f1b(type(Point(3.0, 4.0))) == '42')

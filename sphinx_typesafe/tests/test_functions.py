@@ -46,11 +46,33 @@ def function_a5(a, b, c):
 def function_a6(p, q):
     """Function with various argument, returning one value.
 
-    :type p: sphinx_typesafe.tests.mod1.Point
-    :type q: sphinx_typesafe.tests.mod1.Point
+    :type p: sphinx_typesafe.tests.geometry.Point
+    :type q: sphinx_typesafe.tests.geometry.Point
     :rtype:  str
     """
     return '({},{}) - ({},{}) = {}'.format(p.x, p.y, q.x, q.y, p.distance(q))
+
+@typesafe
+def function_a7(c):
+    """Function with various argument, returning one value.
+
+    :type c: sphinx_typesafe.tests.geometry.Circle
+    :rtype:  str
+    """
+    return '({},{}, {}) = {}'.format(c.x, c.y, c.r, c.area())
+
+@typesafe
+def function_a8(c, p):
+    """Function with various argument, returning one value.
+
+    :type c: sphinx_typesafe.tests.geometry.Circle
+    :type p: sphinx_typesafe.tests.geometry.Point
+    :rtype:  str
+    """
+    return '({},{},{}) - ({},{}) = {}'.format(c.x, c.y, c.r, p.x, p.y, c.distance(p))
+
+
+
 
 @typesafe( {} )
 def function_b1():
@@ -81,8 +103,8 @@ def function_b5(a, b, c):
     """Function with various arguments, returning one value."""
     return '{},{},{}'.format(a, b, c) 
 
-@typesafe( { 'p'     : 'sphinx_typesafe.tests.mod1.Point', 
-             'q'     : 'sphinx_typesafe.tests.mod1.Point', 
+@typesafe( { 'p'     : 'sphinx_typesafe.tests.geometry.Point', 
+             'q'     : 'sphinx_typesafe.tests.geometry.Point', 
              'return': 'str' } )
 def function_b6(p, q):
     """Function with various arguments, returning one value."""
@@ -106,10 +128,24 @@ def test_function_a5():
     assert(function_a5(1,2,3) == '1,2,3')
 
 def test_function_a6():
-    from sphinx_typesafe.tests.mod1 import Point
+    from sphinx_typesafe.tests.geometry import Point
     p = Point(-2.0, -1.0)
     q = Point( 1.0,  3.0)
     assert(function_a6(p, q) == '(-2.0,-1.0) - (1.0,3.0) = 5.0')
+
+
+def test_function_a7():
+    from sphinx_typesafe.tests.geometry import Circle
+    c = Circle(-2.0, -1.0, 5.0)
+    assert(function_a7(c) == '(-2.0,-1.0, 5.0) = 78.5398163397')
+
+def test_function_a8():
+    from sphinx_typesafe.tests.geometry import Circle
+    from sphinx_typesafe.tests.geometry import Point
+    c = Circle(-2.0, -1.0, 5.0)
+    p = Point( 1.0,  4.0)
+    assert(function_a8(c, p) == '(-2.0,-1.0,5.0) - (1.0,4.0) = 0.830951894845')
+
 
 def test_function_b1():
     function_b1()
@@ -127,7 +163,7 @@ def test_function_b5():
     assert(function_b5(1,2,3) == '1,2,3')
 
 def test_function_b6():
-    from sphinx_typesafe.tests.mod1 import Point
+    from sphinx_typesafe.tests.geometry import Point
     p = Point(-2.0, -1.0)
     q = Point( 1.0,  3.0)
     assert(function_b6(p, q) == '(-2.0,-1.0) - (1.0,3.0) = 5.0')

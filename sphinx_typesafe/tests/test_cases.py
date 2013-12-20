@@ -1,10 +1,8 @@
-###
-#
-# This modules demonstrates some common use cases.
-#
-# More detailed tests, exploring little details, are provided in other modules.
-#
-###
+#######################################################
+#                                                     #
+# This modules demonstrates only few common use cases #
+#                                                     #
+#######################################################
 
 
 from sphinx_typesafe.typesafe import typesafe

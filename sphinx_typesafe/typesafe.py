@@ -202,8 +202,8 @@ class typesafe(object):
     class checker(object):
 
         import re
-        __types_re = re.compile(r":type[\s]+(\w+):[\s]+([\w\.]+)", re.IGNORECASE)
-        __rtype_re = re.compile(r":rtype:[\s]+([\w\.]+)", re.IGNORECASE)
+        __types_re = re.compile(r":type[\s]+(\w+)[\s]*:[\s]*([\w\.]+)", re.IGNORECASE)
+        __rtype_re = re.compile(r":rtype[\s]*:[\s]*([\w\.]+)", re.IGNORECASE)
         __error    = 'Wrong type for {}: expected: {}, actual: {}.'
 
         def __init__(self, f, *args, **kwargs):
@@ -240,8 +240,19 @@ class typesafe(object):
             spec = argspec.args[1:] if ismethod else argspec.args
             # check arguments
             from itertools import chain
+            names = list()
+            # check argument against specification
             for name, arg in chain(zip(spec, args), kwargs.items()):
-                self.check_type(name, arg, self.types[name])
+                if name in self.types:
+                    names.append(name)
+                    self.check_type(name, arg, self.types[name])
+                else:
+                    raise AttributeError('specification of variable "{}" is expected.'.format(name))
+            # check specification against arguments
+            snames = set(names)
+            for name, atype in self.types.items():
+                if name != 'return' and not name in snames:
+                    raise AttributeError('surplus specification variable "{}" detected.'.format(name))
 
         def validate_result(self, result):
             """Validate returned value of a decorated function."""
@@ -275,32 +286,41 @@ class typesafe(object):
                 if not isinstance(obj, cls):
                     raise TypeError(self.__error.format(name, type(obj), cls))
 
-        def get_class_type(self, kls):
-            if type(kls) == str: kls = unicode(kls)
-            if type(kls) == unicode:
-                kls = kls.strip()
-                if kls.count('.') > 0:
-                    parts = kls.rpartition('.')
-                    import importlib
-                    m = importlib.import_module(parts[0])
-                    # print('--->>> {} {} {}'.format(parts[0], parts[2], m))
-                    # print(dir(m))
-                    t = getattr(m, parts[2])
-                    return self.get_type(t)
-                else:
-                    import importlib
-                    m = importlib.import_module('__builtin__')
-                    t = getattr(m, kls)
-                    return self.get_type(t)
+        def get_unicode(self, s):
+            if type(s) == str: s = unicode(s)
+            if type(s) == unicode:
+                s = s.strip()
             else:
-                raise NameError('Type name must be an unicode literal instead of {}'.format(
-                                   self.get_type(kls)))
+                raise NameError(
+                    'Type name must be an unicode literal instead of {}'.format(
+                        self.get_type(s)))
+            return s
+
+        def get_class_type(self, klass):
+            kls = self.get_unicode(klass)
+            if kls.count('.') > 0:
+                parts = kls.rpartition('.')
+                import importlib
+                m = importlib.import_module(parts[0])
+                # print('--->>> {} {} {}'.format(parts[0], parts[2], m))
+                # print(dir(m))
+                t = getattr(m, parts[2])
+                return self.get_type(t)
+            else:
+                import importlib
+                m = importlib.import_module('__builtin__')
+                t = getattr(m, kls)
+                return self.get_type(t)
 
         def convert_entries_to_types(self, types):
             # print('types: ', types)
             import collections
             result = collections.OrderedDict()
-            for name, atype in types:
+            for n, t in types:
+                name  = self.get_unicode(n)
+                atype = self.get_unicode(t)
+                name  = name.strip()
+                atype = atype.strip()
                 #-- print('trying to get Type {} for: {}'.format(name, atype))
                 obj = self.get_class_type(atype)
                 #-- print('got: {}'.format(obj))

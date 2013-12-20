@@ -48,8 +48,8 @@ class ClassA(object):
     def method_a6(self, p, q):
         """Function with various argument, returning one value.
 
-        :type p: sphinx_typesafe.tests.mod1.Point
-        :type q: sphinx_typesafe.tests.mod1.Point
+        :type p: sphinx_typesafe.tests.geometry.Point
+        :type q: sphinx_typesafe.tests.geometry.Point
         :rtype:  str
         """
         return '({},{}) - ({},{}) = {}'.format(p.x, p.y, q.x, q.y, p.distance(q))
@@ -83,8 +83,8 @@ class ClassA(object):
         """Function with various arguments, returning one value."""
         return '{},{},{}'.format(a, b, c) 
 
-    @typesafe( { 'p'     : 'sphinx_typesafe.tests.mod1.Point', 
-                 'q'     : 'sphinx_typesafe.tests.mod1.Point', 
+    @typesafe( { 'p'     : 'sphinx_typesafe.tests.geometry.Point', 
+                 'q'     : 'sphinx_typesafe.tests.geometry.Point', 
                  'return': 'str' } )
     def method_b6(self, p, q):
         """Function with various arguments, returning one value."""
@@ -113,7 +113,7 @@ def test_method_a5():
     assert(c.method_a5(1,2,3) == '1,2,3')
 
 def test_method_a6():
-    from sphinx_typesafe.tests.mod1 import Point
+    from sphinx_typesafe.tests.geometry import Point
     p = Point(-2.0, -1.0)
     q = Point( 1.0,  3.0)
     c = ClassA()
@@ -140,7 +140,7 @@ def test_method_b5():
     assert(c.method_b5(1,2,3) == '1,2,3')
 
 def test_method_b6():
-    from sphinx_typesafe.tests.mod1 import Point
+    from sphinx_typesafe.tests.geometry import Point
     p = Point(-2.0, -1.0)
     q = Point( 1.0,  3.0)
     c = ClassA()
