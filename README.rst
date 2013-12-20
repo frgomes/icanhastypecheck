@@ -68,11 +68,10 @@ This is an alternative approach, useful in circunstances where Sphinx-style docu
 
 ::
 
-	@typesafe( { "param_a" : str, 
-		     "param_b" : types.IntType, 
-		     "param_c" : own_module.OwnType
-		     "return"  : bool }
-		     )
+	@typesafe( { 'param_a' : 'str',
+		     'param_b' : 'types.IntType',
+		     'param_c' : 'own_module.OwnType',
+		     'return'  : 'bool } )
 	def foo(param_a, param_b, param_c):
 		""" Some Docstring Info		 """
 		# Do Something 
