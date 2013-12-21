@@ -142,7 +142,7 @@ def test_function_fail_05b():
 
 def test_function_fail_05c():
     import pytest
-    with pytest.raises(AttributeError):
+    with pytest.raises(TypeError):
         @typesafe
         def function_identity(x):
             '''
@@ -154,7 +154,7 @@ def test_function_fail_05c():
 
 def test_function_fail_05d():
     import pytest
-    with pytest.raises(AttributeError):
+    with pytest.raises(TypeError):
         @typesafe
         def function_identity(x):
             '''
@@ -163,7 +163,22 @@ def test_function_fail_05d():
             :rtype : int
             '''
             return x
-        function_identity(42)
+        function_identity()
+
+def test_function_failure_05e():
+    import pytest
+    with pytest.raises(TypeError):
+        @typesafe
+        def function_identity(a, b, x=0, y=0):
+            '''
+            :type a : int
+            :type b : int
+            :type x : int
+            :type y : int
+            :rtype  : int
+            '''
+            return x
+        function_identity(b=3)
 
 def test_function_fail_07a():
     import pytest

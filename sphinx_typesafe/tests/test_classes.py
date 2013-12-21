@@ -54,6 +54,17 @@ class ClassA(object):
         """
         return '({},{}) - ({},{}) = {}'.format(p.x, p.y, q.x, q.y, p.distance(q))
 
+    @typesafe
+    def method_a7(self, a, b, x=0, y=0):
+        '''
+        :type a : int
+        :type b : int
+        :type x : int
+        :type y : int
+        :rtype  : int
+        '''
+        return x
+
     @typesafe( {} )
     def method_b1(self):
         """Function without arguments, returning void."""
@@ -90,6 +101,15 @@ class ClassA(object):
         """Function with various arguments, returning one value."""
         return '({},{}) - ({},{}) = {}'.format(p.x, p.y, q.x, q.y, p.distance(q))
 
+    @typesafe({ 'a' : 'int',
+                'b' : 'int',
+                'x' : 'int',
+                'y' : 'int',
+                'return' : 'int' })
+    def method_b7(self, a, b, x=0, y=0):
+        return x
+
+
 
 
 def test_method_a1():
@@ -119,6 +139,12 @@ def test_method_a6():
     c = ClassA()
     assert(c.method_a6(p, q) == '(-2.0,-1.0) - (1.0,3.0) = 5.0')
 
+def test_method_a7():
+    import pytest
+    with pytest.raises(TypeError):
+        c = ClassA()
+        c.method_a7()
+
 def test_method_b1():
     c = ClassA()
     c.method_b1()
@@ -145,3 +171,9 @@ def test_method_b6():
     q = Point( 1.0,  3.0)
     c = ClassA()
     assert(c.method_b6(p, q) == '(-2.0,-1.0) - (1.0,3.0) = 5.0')
+
+def test_method_b7():
+    import pytest
+    with pytest.raises(TypeError):
+        c = ClassA()
+        c.method_b7(b=3)

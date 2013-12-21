@@ -165,9 +165,8 @@ class typesafe(object):
             This method returns a wrapper which contains the decorator logic for the
             specific case of functions, not class methods.
             '''
-            from functools import wraps
-            @wraps(self.f)
             def wrapper(*args, **kwargs):
+                #-- print('call')
                 #-- print('Called the decorated function {}'.format(self.f.__name__))
                 self.checker.validate_params(self.f, False, *args, **kwargs)
                 result = self.f(*args, **kwargs)
@@ -176,17 +175,15 @@ class typesafe(object):
             return wrapper(*args, **kwargs)
 
         def __method_unbound(self, klass):
-            from functools import wraps
-            @wraps(self.f)
             def wrapper(*args, **kwargs):
+                #-- print('unbounded')
                 raise TypeError('unbound method {}() must be called with {} instance '.format(
                         self.f.__name__, klass.__name__))
             return wrapper
 
         def __method_bound(self, instance, klass):
-            from functools import wraps
-            @wraps(self.f)
             def wrapper(*args, **kwargs):
+                #-- print('bounded')
                 #-- print('Called the decorated method {} of {}'.format(self.f.__name__, instance))
                 self.checker.check_type('self', instance, klass)
                 self.checker.validate_params(self.f, True, *args, **kwargs)
@@ -248,11 +245,6 @@ class typesafe(object):
                     self.check_type(name, arg, self.types[name])
                 else:
                     raise AttributeError('specification of variable "{}" is expected.'.format(name))
-            # check specification against arguments
-            snames = set(names)
-            for name, atype in self.types.items():
-                if name != 'return' and not name in snames:
-                    raise AttributeError('surplus specification variable "{}" detected.'.format(name))
 
         def validate_result(self, result):
             """Validate returned value of a decorated function."""
