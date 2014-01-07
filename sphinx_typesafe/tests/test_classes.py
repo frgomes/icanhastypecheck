@@ -5,7 +5,10 @@ class ClassA(object):
 
     @typesafe
     def method_a1(self):
-        """Function without arguments, returning void."""
+        """Function without arguments, returning void.
+
+        :rtype: None
+        """
         pass
 
     @typesafe
@@ -21,6 +24,7 @@ class ClassA(object):
         """Function with one argument, returning void.
 
         :type a: int
+        :rtype : None
         """
         pass
 
@@ -140,10 +144,8 @@ def test_method_a6():
     assert(c.method_a6(p, q) == '(-2.0,-1.0) - (1.0,3.0) = 5.0')
 
 def test_method_a7():
-    import pytest
-    with pytest.raises(TypeError):
-        c = ClassA()
-        c.method_a7()
+    c = ClassA()
+    c.method_a7(a=5, b=3)
 
 def test_method_b1():
     c = ClassA()
@@ -173,7 +175,5 @@ def test_method_b6():
     assert(c.method_b6(p, q) == '(-2.0,-1.0) - (1.0,3.0) = 5.0')
 
 def test_method_b7():
-    import pytest
-    with pytest.raises(TypeError):
-        c = ClassA()
-        c.method_b7(b=3)
+    c = ClassA()
+    c.method_b7(b=3, a=5)

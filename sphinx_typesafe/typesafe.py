@@ -79,17 +79,9 @@ class typesafe(object):
             return self.descriptor
 
     def __descriptor(self, f, *args, **kwargs):
-        '''This method returns a descriptor which is responsible to coordinate
-        when the Python runtime will receive an actual callable, so that the
-        Python runtime will them call it. More precisely, the descriptor returns
-        a wrapper function which, on the right moment, will be able to perform
-        the decorator logic which surrounds the decorated user's function or
-        user's class method.
-    
-        In other words, the a descriptor is meant to delay the definition of the
-        method wrapper, because (1) the Python runtime delays the user's function or
-        class method to the decorator and (2) the actual instance method to be
-        decorated in only knowable later, at execution time.
+        '''This method returns a descriptor which is responsible for delaying the
+        definition of the method wrapper, because the user's function or class method
+        to be decorated in only knowable later.
         '''
         return self.descript(f, self.checker(f, *args, **kwargs))
 
@@ -108,7 +100,7 @@ class typesafe(object):
            known at that point.
 
         2. the Python runtime executes decorated functions in different ways,
-           depending whether they are functions or actually class methods.
+           depending whether they are actually functions or actually class methods.
            a. In the case of functions, the Python runtime calls the ``__call__``
               method directly. In this case, a wrapper is built and called
               immediately, returning its results to the Python runtime.
@@ -117,14 +109,13 @@ class typesafe(object):
               callable to that instance. Then, the Python runtime calls the
               ``__call__`` method in order to execute the class method.
 
-
         Notice that, in the extreme case of a decorator with arguments, applied to
         a class method, the Python runtime will (1) first call ``__get__`` in order
-        to obtain an unbounded reference to the users' class method, at decoration
+        to obtain an unbounded reference to the users' class method at decoration
         time (compilation time), then (2) call ``__get__`` at runtime when the
         ``instance`` object is passed and a bounded reference to the user's class
         method and then (3) finally, method ``__call__`` is called, in order to
-        executed the bounded class method.
+        execute the bounded class method.
         '''
         def __init__(self, f, checker):
             self.f = f
@@ -197,11 +188,15 @@ class typesafe(object):
 
     
     class checker(object):
+        '''This class contains the type checking logic with is employed by
+        decorator @typesafe.
+        '''
 
         import re
         __types_re = re.compile(r":type[\s]+(\w+)[\s]*:[\s]*([\w\.]+)", re.IGNORECASE)
         __rtype_re = re.compile(r":rtype[\s]*:[\s]*([\w\.]+)", re.IGNORECASE)
         __error    = 'Wrong type for {}: expected: {}, actual: {}.'
+        __internal = 'internal error: this condition should never happen'
 
         def __init__(self, f, *args, **kwargs):
             if len(args) == 0:
@@ -217,9 +212,9 @@ class typesafe(object):
             if doc is None: doc = ''
             entries = self.__types_re.findall(doc)
             try:
-                entries.append( ('return', self.__rtype_re.search(doc).group(1)) )
+                entries.append( (str('return'), self.__rtype_re.search(doc).group(1)) )
             except:
-                entries.append( ('return', 'types.NoneType') )
+                entries.append( (str('return'), 'types.NotImplementedType') )
             return self.convert_entries_to_types(entries)
 
         def parse_params(self, *args, **kwargs):
@@ -234,7 +229,8 @@ class typesafe(object):
             # obtain function specification
             import inspect
             argspec = inspect.getargspec(func)
-            spec = argspec.args[1:] if ismethod else argspec.args
+            spec     = argspec.args[1:] if ismethod else argspec.args
+            defaults = argspec.defaults if argspec.defaults is not None else ()
             # check arguments
             from itertools import chain
             names = list()
@@ -245,6 +241,30 @@ class typesafe(object):
                     self.check_type(name, arg, self.types[name])
                 else:
                     raise AttributeError('specification of variable "{}" is expected.'.format(name))
+            # check default arguments, if any
+            snames = [ item for item in chain(spec, kwargs.keys()) if item not in set(names) ]
+            dnames = list()
+            index = 0; dlen = -1 * len(defaults)
+            for name in snames[::-1]:
+                index -= 1
+                if name in self.types:
+                    if index >= dlen:
+                        dnames.append(name)
+                        self.check_type(name, defaults[index], self.types[name])
+                    else:
+                        break
+                else:
+                    raise RuntimeError(self.__internal)
+            # check missing arguments
+            xnames = [ item for item in snames if item not in set(dnames) ]
+            if len(xnames) > 0:
+                raise AttributeError('missing argument(s) expected: "{}"'.format(xnames))
+
+            # check extra arguments
+            rnames = [ item for item in self.types.keys() \
+                       if item not in set(spec) and item != 'return' ]
+            if len(rnames) > 0:
+                raise AttributeError('extra specification(s) detected: "{}"'.format(rnames))
 
         def validate_result(self, result):
             """Validate returned value of a decorated function."""
@@ -263,8 +283,10 @@ class typesafe(object):
                 return type(obj)
 
         def check_type(self, name, obj, cls):
+            # return silently if either obj or cls is None
             if obj is None and cls is None: return
             import types
+            # perform type checking
             from zope.interface.verify import verifyObject
             if obj is type or isinstance(obj, ( types.TypeType, 
                                                 types.ClassType, 
@@ -308,8 +330,7 @@ class typesafe(object):
             # print('types: ', types)
             import collections
             result = collections.OrderedDict()
-            for n, t in types:
-                name  = self.get_unicode(n)
+            for name, t in types:
                 atype = self.get_unicode(t)
                 name  = name.strip()
                 atype = atype.strip()

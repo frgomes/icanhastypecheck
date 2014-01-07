@@ -7,6 +7,7 @@ class Point(object):
         """Initialize a Point.
         :type x: float
         :type y: float
+        :rtype : None
         """
         self.x = x
         self.y = y
@@ -41,6 +42,7 @@ class Circle(Point):
         :type x: float
         :type y: float
         :type r: float
+        :rtype : None
         """
         super(Circle,self).__init__(x, y)
         self.r = r

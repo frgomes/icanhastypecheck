@@ -24,17 +24,17 @@ def test_function_fail_01():
     import pytest
     with pytest.raises(AttributeError):
         @typesafe( 'rubbish' )
-        def function_pass():
+        def some_function():
             pass
-        function_pass()
+        some_function()
 
 def test_function_fail_02():
     import pytest
     with pytest.raises(AttributeError):
         @typesafe( {}, 'rubbish' )
-        def function_pass():
+        def some_function():
             pass
-        function_pass()
+        some_function()
 
 
 def test_function_fail_03a():
@@ -125,60 +125,108 @@ def test_function_fail_05a():
     import pytest
     with pytest.raises(AttributeError):
         @typesafe
-        def function_identity(x):
+        def some_function(x):
             return x
-        function_identity(42)
+        some_function(42)
 
 def test_function_fail_05b():
     import pytest
     with pytest.raises(TypeError):
         @typesafe
-        def function_identity(x):
+        def some_function(x):
             '''
             :type x : int
             '''
             return x
-        function_identity(42)
+        some_function(42)
 
 def test_function_fail_05c():
     import pytest
-    with pytest.raises(TypeError):
+    with pytest.raises(AttributeError):
         @typesafe
-        def function_identity(x):
+        def some_function(x):
             '''
             :type x : int
             :type y : int
             '''
             return x
-        function_identity(42)
+        some_function(42)
 
 def test_function_fail_05d():
     import pytest
-    with pytest.raises(TypeError):
+    with pytest.raises(AttributeError):
         @typesafe
-        def function_identity(x):
+        def some_function_(x):
+            '''
+            :type x : int
+            :type y : int
+            :rtype  : int
+            '''
+            return x
+        some_function_(42)
+
+def test_function_fail_05e():
+    import pytest
+    with pytest.raises(AttributeError):
+        @typesafe
+        def some_function(x):
             '''
             :type x: int
             :type y: int
             :rtype : int
             '''
             return x
-        function_identity()
+        some_function()
 
-def test_function_failure_05e():
+def test_function_failure_05f():
     import pytest
-    with pytest.raises(TypeError):
+    with pytest.raises(AttributeError):
         @typesafe
-        def function_identity(a, b, x=0, y=0):
+        def some_function(a, b, x=0, y=0):
             '''
             :type a : int
             :type b : int
             :type x : int
             :type y : int
+            '''
+            return x
+        some_function(b=3)
+
+def test_function_failure_05g():
+    import pytest
+    with pytest.raises(AttributeError):
+        @typesafe
+        def some_function(a, b, x=0, y=0):
+            '''
+            :type a : int
+            :type b : int
+            :type x : int
+            :type y : int
+            :type r : int
             :rtype  : int
             '''
             return x
-        function_identity(b=3)
+        some_function(a=5, b=3)
+
+def test_function_failure_05h():
+    import pytest
+    with pytest.raises(AttributeError):
+        @typesafe
+        def some_function(a, b, x=0, y=0):
+            '''
+            :type a : int
+            :type b : int
+            :type x : int
+            :type y : int
+            :type r : int
+            :type s : int
+            :rtype  : int
+            '''
+            return x
+        some_function(a=5, b=3)
+
+
+
 
 def test_function_fail_07a():
     import pytest

@@ -3,7 +3,11 @@ from sphinx_typesafe.typesafe import typesafe
 
 @typesafe
 def function_a1():
-    """Function without arguments, returning void."""
+    """Function without arguments, returning void.
+
+    :rtype: None
+    """
+
     pass
 
 @typesafe
@@ -19,6 +23,7 @@ def function_a3(a):
     """Function with one argument, returning void.
 
     :type a: int
+    :rtype: None
     """
     pass
 
