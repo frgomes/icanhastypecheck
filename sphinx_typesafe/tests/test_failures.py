@@ -226,6 +226,19 @@ def test_function_failure_05h():
         some_function(a=5, b=3)
 
 
+def test_function_fail_06a():
+    import pytest
+    with pytest.raises(AttributeError):
+        @typesafe
+        def some_function(a, b, c, d, e, f):
+            """Function with argument which should not be checked and arguments missing specification.
+
+            :type a: types.NotImplementedType
+            :type b: types.IntType
+            :rtype:  types.StringType
+            """
+            return '{},{}'.format(a, b) 
+        assert(some_function('not checked',2) == 'not checked,2')
 
 
 def test_function_fail_07a():

@@ -45,10 +45,11 @@ This is the preferred way since you will be also documenting your code.
 ::
 
 	@typesafe
-	def foo(param_a, param_b):
+	def foo(param_a, param_b, param_c):
 		"""
 		:type param_a: 	types.StringType
 		:type param_b: 	types.IntType
+		:type param_c: 	types.NotImplementedType
 		:rtype:         types.BooleanType	
 		"""
 		# Do Something 
@@ -58,6 +59,12 @@ This is the preferred way since you will be also documenting your code.
 .. note::
 
     Observe the usage of ``rtype`` to specify the type returned by the function.
+    When ``rtype`` is not specified, it is assumed to be ``types.NoneType``.
+
+.. note::
+
+    When a parameter specifies ``types.NotImplementedType``, the type checking logic simply
+    ignores that parameter, which means that you can pass any type you wish.
 
 
 

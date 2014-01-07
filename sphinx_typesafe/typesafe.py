@@ -214,7 +214,7 @@ class typesafe(object):
             try:
                 entries.append( (str('return'), self.__rtype_re.search(doc).group(1)) )
             except:
-                entries.append( (str('return'), 'types.NotImplementedType') )
+                entries.append( (str('return'), 'types.NoneType') )
             return self.convert_entries_to_types(entries)
 
         def parse_params(self, *args, **kwargs):
@@ -226,26 +226,28 @@ class typesafe(object):
 
         def validate_params(self, func, ismethod, *args, **kwargs):
             """Validate formal parameters before calling a decorated function."""
-            # obtain function specification
             import inspect
+            from itertools import chain
+
+            # obtain function specification
             argspec = inspect.getargspec(func)
             spec     = argspec.args[1:] if ismethod else argspec.args
             defaults = argspec.defaults if argspec.defaults is not None else ()
-            # check arguments
-            from itertools import chain
-            names = list()
+
             # check argument against specification
+            names = list()
             for name, arg in chain(zip(spec, args), kwargs.items()):
                 if name in self.types:
                     names.append(name)
                     self.check_type(name, arg, self.types[name])
                 else:
                     raise AttributeError('specification of variable "{}" is expected.'.format(name))
+
             # check default arguments, if any
-            snames = [ item for item in chain(spec, kwargs.keys()) if item not in set(names) ]
+            rnames = [ item for item in chain(spec, kwargs.keys()) if item not in set(names) ]
             dnames = list()
             index = 0; dlen = -1 * len(defaults)
-            for name in snames[::-1]:
+            for name in rnames[::-1]:
                 index -= 1
                 if name in self.types:
                     if index >= dlen:
@@ -253,12 +255,12 @@ class typesafe(object):
                         self.check_type(name, defaults[index], self.types[name])
                     else:
                         break
-                else:
-                    raise RuntimeError(self.__internal)
+
             # check missing arguments
-            xnames = [ item for item in snames if item not in set(dnames) ]
-            if len(xnames) > 0:
-                raise AttributeError('missing argument(s) expected: "{}"'.format(xnames))
+            mnames = [ item for item in rnames \
+                       if item not in set(dnames) ]
+            if len(mnames) > 0:
+                raise AttributeError('missing argument(s) expected: "{}"'.format(mnames))
 
             # check extra arguments
             rnames = [ item for item in self.types.keys() \
@@ -286,6 +288,8 @@ class typesafe(object):
             # return silently if either obj or cls is None
             if obj is None and cls is None: return
             import types
+            # return silently if type is marked to be ignored
+            if cls == types.NotImplementedType: return
             # perform type checking
             from zope.interface.verify import verifyObject
             if obj is type or isinstance(obj, ( types.TypeType, 

@@ -6,8 +6,6 @@ class ClassA(object):
     @typesafe
     def method_a1(self):
         """Function without arguments, returning void.
-
-        :rtype: None
         """
         pass
 
@@ -24,7 +22,6 @@ class ClassA(object):
         """Function with one argument, returning void.
 
         :type a: int
-        :rtype : None
         """
         pass
 
