@@ -53,4 +53,14 @@ setup(name=name,
       zip_safe=False,
       setup_requires=setup_requires,
       test_suite=name+'/tests',
+      tests_require = [
+          'pytest-cov',
+          'pytest',
+          #'webtest',
+          #'wsgi_intercept',
+          #'zope.testbrowser',
+          ],
+      extras_require={
+          'testing': ["coveralls"],
+          },
       )

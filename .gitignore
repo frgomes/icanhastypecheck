@@ -2,6 +2,7 @@
 #[^#]+#
 *.pyc
 *.egg-info
+*.egg
 *.o
 *.a
 .coverage

@@ -20,6 +20,41 @@ from __future__ import unicode_literals
 from __future__ import print_function
 
 
+def get_unicode(s):
+    if type(s) == str: s = unicode(s)
+    if type(s) == unicode:
+        s = s.strip()
+    else:
+        raise NameError(
+            'Type name must be an unicode literal instead of {}'.format(s))
+    return s
+
+def get_class_type(klass):
+    def get_type(obj):
+        import types
+        if obj is type or isinstance(obj, ( types.TypeType, 
+                                            types.ClassType, 
+                                            types.FunctionType )):
+            return obj
+        else:
+            return type(obj)
+
+    kls = get_unicode(klass)
+    if kls.count('.') > 0:
+        parts = kls.rpartition('.')
+        import importlib
+        m = importlib.import_module(parts[0])
+        # print('--->>> {} {} {}'.format(parts[0], parts[2], m))
+        # print(dir(m))
+        t = getattr(m, parts[2])
+        return get_type(t)
+    else:
+        import importlib
+        m = importlib.import_module('__builtin__')
+        t = getattr(m, kls)
+        return get_type(t)
+
+
 class typesafe(object):
     """Decorator which verifies function argument types"""
 
@@ -57,10 +92,8 @@ class typesafe(object):
                   Python runtime calls its __call__ method, the decorator logic
                   will execute.
         '''
-        # it's time to build a descriptor now
-        self.descriptor = self.__descriptor(self.f, *(self.dargs), **(self.dkwargs))
-        # delegate __get__ to the descriptor
-        return self.descriptor.__get__(instance, klass)
+        # delegate __get__ to a newly built descriptor
+        return self.__descriptor(self.f, *(self.dargs), **(self.dkwargs)).__get__(instance, klass)
 
     def __call__(self, *args, **kwargs):
         '''This method is called in when:
@@ -70,24 +103,22 @@ class typesafe(object):
         '''
         if self.f:
             # This case applies to function calls only, not method calls
-            self.descriptor = self.__descriptor(self.f)
-            return self.descriptor.__call__(*args, **kwargs)
+            return self.__descriptor(self.f).__call__(*args, **kwargs)
         else:
             # This case applies to decorator with arguments
             self.f = args[0]
-            self.descriptor = self.__descriptor(self.f, *(self.dargs), **(self.dkwargs))
-            return self.descriptor
+            return self.__descriptor(self.f, *(self.dargs), **(self.dkwargs))
 
     def __descriptor(self, f, *args, **kwargs):
         '''This method returns a descriptor which is responsible for delaying the
         definition of the method wrapper, because the user's function or class method
         to be decorated in only knowable later.
         '''
-        return self.descript(f, self.checker(f, *args, **kwargs))
+        return self.__descript(f, self.__checker(f, *args, **kwargs))
 
 
 
-    class descript(object):
+    class __descript(object):
         '''This class is intended to delay the definition of the method wrapper
         which surrounds the user's function or user's class method. This is
         necessary for two reasons:
@@ -119,7 +150,10 @@ class typesafe(object):
         '''
         def __init__(self, f, checker):
             self.f = f
-            self.checker = checker
+            self.__name__ = self.f.__name__
+            self.__doc__ = self.f.__doc__
+            self.__dict__.update(self.f.__dict__)
+            self.__checker = checker
 
         def __get__(self, instance, klass):
             '''A decorated class method is requested for being called later.
@@ -159,9 +193,9 @@ class typesafe(object):
             def wrapper(*args, **kwargs):
                 #-- print('call')
                 #-- print('Called the decorated function {}'.format(self.f.__name__))
-                self.checker.validate_params(self.f, False, *args, **kwargs)
+                self.__checker.validate_params(self.f, False, *args, **kwargs)
                 result = self.f(*args, **kwargs)
-                self.checker.validate_result(result)
+                self.__checker.validate_result(result)
                 return result
             return wrapper(*args, **kwargs)
 
@@ -176,10 +210,10 @@ class typesafe(object):
             def wrapper(*args, **kwargs):
                 #-- print('bounded')
                 #-- print('Called the decorated method {} of {}'.format(self.f.__name__, instance))
-                self.checker.check_type('self', instance, klass)
-                self.checker.validate_params(self.f, True, *args, **kwargs)
+                self.__checker.check_type('self', instance, klass)
+                self.__checker.validate_params(self.f, True, *args, **kwargs)
                 result = self.f(instance, *args, **kwargs)
-                self.checker.validate_result(result)
+                self.__checker.validate_result(result)
                 return result
             # This instance does not need the descriptor anymore,
             # let it find the wrapper directly next time:
@@ -187,7 +221,7 @@ class typesafe(object):
             return wrapper
 
     
-    class checker(object):
+    class __checker(object):
         '''This class contains the type checking logic with is employed by
         decorator @typesafe.
         '''
@@ -275,15 +309,6 @@ class typesafe(object):
             else:
                 self.check_type('return', result, None)
 
-        def get_type(self, obj):
-            import types
-            if obj is type or isinstance(obj, ( types.TypeType, 
-                                                types.ClassType, 
-                                                types.FunctionType )):
-                return obj
-            else:
-                return type(obj)
-
         def check_type(self, name, obj, cls):
             # return silently if either obj or cls is None
             if obj is None and cls is None: return
@@ -298,48 +323,22 @@ class typesafe(object):
                 # print('Check argument {} type {} against {}'.format(name, obj, cls))
                 if not issubclass(obj, cls):
                     if not 'providedBy' in cls or not verifyObject(cls, obj):
-                        raise TypeError(self.__error.format(name, obj, cls))
+                        raise TypeError(self.__error.format(name, cls, obj))
             else:
                 # print('Check argument {} type {} against {}'.format(name, type(obj), cls))
                 if not isinstance(obj, cls):
-                    raise TypeError(self.__error.format(name, type(obj), cls))
-
-        def get_unicode(self, s):
-            if type(s) == str: s = unicode(s)
-            if type(s) == unicode:
-                s = s.strip()
-            else:
-                raise NameError(
-                    'Type name must be an unicode literal instead of {}'.format(
-                        self.get_type(s)))
-            return s
-
-        def get_class_type(self, klass):
-            kls = self.get_unicode(klass)
-            if kls.count('.') > 0:
-                parts = kls.rpartition('.')
-                import importlib
-                m = importlib.import_module(parts[0])
-                # print('--->>> {} {} {}'.format(parts[0], parts[2], m))
-                # print(dir(m))
-                t = getattr(m, parts[2])
-                return self.get_type(t)
-            else:
-                import importlib
-                m = importlib.import_module('__builtin__')
-                t = getattr(m, kls)
-                return self.get_type(t)
+                    raise TypeError(self.__error.format(name, cls, type(obj)))
 
         def convert_entries_to_types(self, types):
             # print('types: ', types)
             import collections
             result = collections.OrderedDict()
             for name, t in types:
-                atype = self.get_unicode(t)
+                atype = get_unicode(t)
                 name  = name.strip()
                 atype = atype.strip()
                 #-- print('trying to get Type {} for: {}'.format(name, atype))
-                obj = self.get_class_type(atype)
+                obj = get_class_type(atype)
                 #-- print('got: {}'.format(obj))
                 result[name] = obj
             #-- print('result: ', result)
