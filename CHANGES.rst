@@ -1,6 +1,28 @@
 CHANGES
 =======
 
+0.3 (13-feb-2014)
+-----------------
+
+* Several bugfixes and enhancements
+
+    * better resolution of type names
+
+    * fix support for methods
+
+    * fix documentation
+
+    * test suite now has 60 test cases
+
+    * support for types.NoneType
+
+    * more restrictive matching of documenation against parameters
+
+    * support for ignoring type checking: types.NotImplementeType
+
+    * exposing function ``get_class_type``
+
+
 0.2 (03-dec-2013)
 -----------------
 

@@ -1,5 +1,6 @@
 from sphinx_typesafe.typesafe import typesafe
 
+
 class Point(object):
 
     @typesafe
@@ -30,7 +31,6 @@ class Point(object):
         :rtype: float
         '''
         return 0.0
-
 
 
 class Circle(Point):

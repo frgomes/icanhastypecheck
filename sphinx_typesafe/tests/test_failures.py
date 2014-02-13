@@ -19,7 +19,6 @@ def function_f1b(x):
     return '{}'.format(x)
 
 
-
 def test_function_fail_01():
     import pytest
     with pytest.raises(AttributeError):
@@ -27,6 +26,7 @@ def test_function_fail_01():
         def some_function():
             pass
         some_function()
+
 
 def test_function_fail_02():
     import pytest
@@ -45,6 +45,7 @@ def test_function_fail_03a():
             return x
         function_identity(42)
 
+
 def test_function_fail_03b():
     import pytest
     with pytest.raises(AttributeError):
@@ -52,6 +53,7 @@ def test_function_fail_03b():
         def function_identity(x):
             return x
         function_identity(42)
+
 
 def test_function_fail_03c():
     import pytest
@@ -61,6 +63,7 @@ def test_function_fail_03c():
             return x
         function_identity(42)
 
+
 def test_function_fail_03d():
     import pytest
     with pytest.raises(NameError):
@@ -69,6 +72,7 @@ def test_function_fail_03d():
             return x
         function_identity(42)
 
+
 def test_function_fail_03e():
     import pytest
     with pytest.raises(NameError):
@@ -76,6 +80,7 @@ def test_function_fail_03e():
         def function_identity(x):
             return x
         function_identity(42)
+
 
 def test_function_fail_a3f():
     import pytest
@@ -87,6 +92,7 @@ def test_function_fail_a3f():
             return x
         function_identity(42)
 
+
 def test_function_success_04a():
     @typesafe
     def function_identity(x):
@@ -96,6 +102,7 @@ def test_function_success_04a():
         '''
         return x
     function_identity(42)
+
 
 def test_function_success_04b():
     @typesafe
@@ -107,12 +114,14 @@ def test_function_success_04b():
         return x
     function_identity(42)
 
+
 def test_function_success_04c():
     @typesafe( { 'x'      : 'int',
                  'return' : 'int' } )
     def function_identity(x):
         return x
     function_identity(42)
+
 
 def test_function_success_04d():
     @typesafe( { '  x  '      : '   int   ',
@@ -121,6 +130,7 @@ def test_function_success_04d():
         return x
     function_identity(42)
 
+
 def test_function_fail_05a():
     import pytest
     with pytest.raises(AttributeError):
@@ -128,6 +138,7 @@ def test_function_fail_05a():
         def some_function(x):
             return x
         some_function(42)
+
 
 def test_function_fail_05b():
     import pytest
@@ -140,6 +151,7 @@ def test_function_fail_05b():
             return x
         some_function(42)
 
+
 def test_function_fail_05c():
     import pytest
     with pytest.raises(AttributeError):
@@ -151,6 +163,7 @@ def test_function_fail_05c():
             '''
             return x
         some_function(42)
+
 
 def test_function_fail_05d():
     import pytest
@@ -165,6 +178,7 @@ def test_function_fail_05d():
             return x
         some_function_(42)
 
+
 def test_function_fail_05e():
     import pytest
     with pytest.raises(AttributeError):
@@ -177,6 +191,7 @@ def test_function_fail_05e():
             '''
             return x
         some_function()
+
 
 def test_function_failure_05f():
     import pytest
@@ -191,6 +206,7 @@ def test_function_failure_05f():
             '''
             return x
         some_function(b=3)
+
 
 def test_function_failure_05g():
     import pytest
@@ -207,6 +223,7 @@ def test_function_failure_05g():
             '''
             return x
         some_function(a=5, b=3)
+
 
 def test_function_failure_05h():
     import pytest
@@ -246,10 +263,12 @@ def test_function_fail_07a():
     with pytest.raises(TypeError):
         assert(function_f1a('rubbish') == '42')
 
+
 def test_function_fail_07b():
     import pytest
     with pytest.raises(TypeError):
         assert(function_f1b('rubbish') == '42')
+
 
 def test_function_fail_08a():
     import pytest
@@ -257,17 +276,20 @@ def test_function_fail_08a():
         from sphinx_typesafe.tests.geometry import Point
         assert(function_f1a(Point(3.0, 4.0)) == '42')
 
+
 def test_function_fail_08b():
     import pytest
     with pytest.raises(TypeError):
         from sphinx_typesafe.tests.geometry import Point
         assert(function_f1b(Point(3.0, 4.0)) == '42')
 
+
 def test_function_fail_09a():
     import pytest
     with pytest.raises(TypeError):
         from sphinx_typesafe.tests.geometry import Point
         assert(function_f1a(type(Point(3.0, 4.0))) == '42')
+
 
 def test_function_fail_09b():
     import pytest

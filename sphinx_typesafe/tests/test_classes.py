@@ -111,27 +111,30 @@ class ClassA(object):
         return x
 
 
-
-
 def test_method_a1():
     c = ClassA()
     c.method_a1()
+
 
 def test_method_a2():
     c = ClassA()
     assert(c.method_a2() == 42)
 
+
 def test_method_a3():
     c = ClassA()
     c.method_a3(5)
+
 
 def test_method_a4():
     c = ClassA()
     assert(c.method_a4(42) == '42')
 
+
 def test_method_a5():
     c = ClassA()
     assert(c.method_a5(1,2,3) == '1,2,3')
+
 
 def test_method_a6():
     from sphinx_typesafe.tests.geometry import Point
@@ -140,29 +143,36 @@ def test_method_a6():
     c = ClassA()
     assert(c.method_a6(p, q) == '(-2.0,-1.0) - (1.0,3.0) = 5.0')
 
+
 def test_method_a7():
     c = ClassA()
     c.method_a7(a=5, b=3)
+
 
 def test_method_b1():
     c = ClassA()
     c.method_b1()
 
+
 def test_method_b2():
     c = ClassA()
     assert(c.method_b2() == 42)
+
 
 def test_method_b3():
     c = ClassA()
     c.method_b3(5)
 
+
 def test_method_b4():
     c = ClassA()
     assert(c.method_b4(42) == '42')
 
+
 def test_method_b5():
     c = ClassA()
     assert(c.method_b5(1,2,3) == '1,2,3')
+
 
 def test_method_b6():
     from sphinx_typesafe.tests.geometry import Point
@@ -170,6 +180,7 @@ def test_method_b6():
     q = Point( 1.0,  3.0)
     c = ClassA()
     assert(c.method_b6(p, q) == '(-2.0,-1.0) - (1.0,3.0) = 5.0')
+
 
 def test_method_b7():
     c = ClassA()

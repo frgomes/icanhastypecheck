@@ -5,6 +5,7 @@
 *.egg
 *.o
 *.a
+.cache
 .coverage
 /build/
 /dist/

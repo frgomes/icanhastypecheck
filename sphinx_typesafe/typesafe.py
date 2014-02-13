@@ -29,6 +29,7 @@ def get_unicode(s):
             'Type name must be an unicode literal instead of {}'.format(s))
     return s
 
+
 def get_class_type(klass):
     def get_type(obj):
         import types
@@ -116,8 +117,6 @@ class typesafe(object):
         '''
         return self.__descript(f, self.__checker(f, *args, **kwargs))
 
-
-
     class __descript(object):
         '''This class is intended to delay the definition of the method wrapper
         which surrounds the user's function or user's class method. This is
@@ -203,7 +202,7 @@ class typesafe(object):
             def wrapper(*args, **kwargs):
                 #-- print('unbounded')
                 raise TypeError('unbound method {}() must be called with {} instance '.format(
-                        self.f.__name__, klass.__name__))
+                    self.f.__name__, klass.__name__))
             return wrapper
 
         def __method_bound(self, instance, klass):
@@ -220,7 +219,6 @@ class typesafe(object):
             setattr(instance, self.f.__name__, wrapper)
             return wrapper
 
-    
     class __checker(object):
         '''This class contains the type checking logic with is employed by
         decorator @typesafe.
@@ -237,7 +235,7 @@ class typesafe(object):
                 self.types = self.inspect_function(f)
             else:
                 self.types = self.parse_params(*args, **kwargs)
-    
+
         def inspect_function(self, func):
             """Obtain argument types of a decorated function by instrospecting its Sphinx docstring.""" 
             import inspect
@@ -291,13 +289,13 @@ class typesafe(object):
                         break
 
             # check missing arguments
-            mnames = [ item for item in rnames \
+            mnames = [ item for item in rnames
                        if item not in set(dnames) ]
             if len(mnames) > 0:
                 raise AttributeError('missing argument(s) expected: "{}"'.format(mnames))
 
             # check extra arguments
-            rnames = [ item for item in self.types.keys() \
+            rnames = [ item for item in self.types.keys()
                        if item not in set(spec) and item != 'return' ]
             if len(rnames) > 0:
                 raise AttributeError('extra specification(s) detected: "{}"'.format(rnames))

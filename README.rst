@@ -157,6 +157,28 @@ The idea and parts of the implementation were inspired by the book: `Pro Python 
 
 
 
+Building from source
+====================
+
+Start from a clean and minimalist virtual environment, for example:
+
+::
+
+    $ pip list                                                                                    
+    pip (1.4)
+    setuptools (2.1)
+    wsgiref (0.1.2)
+
+
+Download sources and run test cases
+
+::
+
+   $ git clone https://github.com/frgomes/sphinx_typesafe
+   $ cd sphinx_typesafe
+   $ python setup.py devtest && py.test
+
+
 FAQ
 ===
 

@@ -25,6 +25,23 @@ setup_requires = [
     'setuptools_git >= 0.3',
     ]
 
+install_requires = [
+    'zope.interface',
+    ]
+
+tests_require = [
+    'pytest>=2.4.2',
+    'pytest-cov',
+    'pytest-pep8!=1.0.3',
+    'pytest-xdist',
+    ]
+
+docs_require = [
+    'Sphinx',
+    'docutils',
+    'repoze.sphinx.autointerface',
+    ]
+
 
 setup(name=name,
       version=version,
@@ -52,15 +69,11 @@ setup(name=name,
       include_package_data=True,
       zip_safe=False,
       setup_requires=setup_requires,
+      install_requires=install_requires,
       test_suite=name+'/tests',
-      tests_require = [
-          'pytest-cov',
-          'pytest',
-          #'webtest',
-          #'wsgi_intercept',
-          #'zope.testbrowser',
-          ],
+      tests_require = tests_require,
       extras_require={
-          'testing': ["coveralls"],
+          'testing': tests_require,
+          'docs': docs_require,
           },
       )

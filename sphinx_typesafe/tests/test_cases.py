@@ -27,8 +27,6 @@ def f_2(a, b, c):
     return '{}+{}+{}'.format(a, b, c) 
 
 
-
-
 class ClassA(object):
 
     def __init__(self):
@@ -50,7 +48,6 @@ class ClassA(object):
                 'return': 'types.StringType', })
     def method_2(self, a, b, c):
         return '{} {}+{}+{}'.format(self.x, a, b, c) 
-
 
 
 def test_function():
