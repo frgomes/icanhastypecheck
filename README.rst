@@ -44,6 +44,8 @@ This is the preferred way since you will be also documenting your code.
 
 ::
 
+        from sphinx_typesafe.typesafe import typesafe
+        
 	@typesafe
 	def foo(param_a, param_b, param_c):
 		"""
@@ -75,6 +77,8 @@ This is an alternative approach, useful in circunstances where Sphinx-style docu
 
 ::
 
+        from sphinx_typesafe.typesafe import typesafe
+        
 	@typesafe( { 'param_a' : 'str',
 		     'param_b' : 'types.IntType',
 		     'param_c' : 'own_module.OwnType',
@@ -110,6 +114,7 @@ then you can employ this type in your code like this:
 ::
 
    from mod1 import Point
+   from sphinx_typesafe.typesafe import typesafe
 
    @typesafe
    def foo(afunc):
@@ -141,6 +146,8 @@ Syntax for Python3
 
 ::
 
+        from sphinx_typesafe.typesafe import typesafe
+        
 	@typesafe
 	def foo(param_a: str, param_b: int) -> bool:
 		# Do Something 
