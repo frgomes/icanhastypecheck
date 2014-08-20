@@ -8,6 +8,8 @@
 .. _Contact : http://github.com/~frgomes
 
 
+----
+
 
 ``sphinx_typesafe`` is a decorator which enables dynamic type checking on Python 
 method and function calls. It works in conjunction with `Sphinx-style docstrings`_,
