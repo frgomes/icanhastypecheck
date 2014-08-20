@@ -13,7 +13,7 @@
 
 ``sphinx_typesafe`` is a decorator which enables dynamic type checking on Python 
 method and function calls. It works in conjunction with `Sphinx-style docstrings`_,
-which makes it particularly convenient for keeping the code documentation up-to-date
+which makes it particularly convenient for keeping the documentation synchronized
 with the code actually being executed.
 
 .. _`Sphinx-style docstrings`: http://sphinx-doc.org/markup/desc.html#info-field-lists
